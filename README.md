@@ -9,7 +9,6 @@
         <h1 class="text-center">Syötä treenitulos ja toistomäärä</h1>
         <form class="mb-4">
             <div class="form-group">
-                <label for="harjoitus">Harjoitus:</label>
                 <select id="harjoitus" class="form-control">
                     <option value="maastaveto">Maastaveto</option>
                     <option value="leuanveto">Leuanveto</option>
@@ -18,11 +17,9 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="tulos">Tulos (kg):</label>
                 <input type="number" id="tulos" class="form-control" min="0">
             </div>
             <div class="form-group">
-                <label for "toistot">Toistomäärä:</label>
                 <input type="number" id="toistot" class="form-control" min="0">
             </div>
             <button type="button" class="btn btn-primary" onclick="tallennaTulos()">Tallenna</button>
