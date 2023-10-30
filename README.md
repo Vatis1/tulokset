@@ -22,7 +22,7 @@
                 <input type="number" id="tulos" class="form-control" min="0">
             </div>
             <div class="form-group">
-                <label for="toistot">Toistomäärä:</label>
+                <label for "toistot">Toistomäärä:</label>
                 <input type="number" id="toistot" class="form-control" min="0">
             </div>
             <button type="button" class="btn btn-primary" onclick="tallennaTulos()">Tallenna</button>
@@ -34,50 +34,7 @@
         </ul>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Tallennettujen tulosten kaaviot
-        const tulosKaaviot = {
-            maastaveto: null,
-            leuanveto: null,
-            penkkipunnerrus: null,
-            pystypunnerrus: null,
-        };
-
-        function alustaTulosKaavio(harjoitus) {
-            const ctx = document.getElementById(`${harjoitus}-kaavio`).getContext('2d');
-            tulosKaaviot[harjoitus] = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Tulos (kg)',
-                        data: [],
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                    }],
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                        },
-                    },
-                },
-            });
-        }
-
-        function lisaaTulosKaavioon(harjoitus, tulos, toistot) {
-            if (tulosKaaviot[harjoitus] === null) {
-                alustaTulosKaavio(harjoitus);
-            }
-
-            tulosKaaviot[harjoitus].data.labels.push(`${tulos} kg (${toistot} toistoa)`);
-            tulosKaaviot[harjoitus].data.datasets[0].data.push(tulos);
-            tulosKaaviot[harjoitus].update();
-        }
-
         function tallennaTulos() {
             const harjoitus = document.getElementById('harjoitus').value;
             const tulos = document.getElementById('tulos').value;
@@ -90,9 +47,6 @@
                 uusiTulos.textContent = tulosTeksti;
                 uusiTulos.classList.add('list-group-item');
                 tuloksetLista.appendChild(uusiTulos);
-
-                // Lisätään tulos kaavioon
-                lisaaTulosKaavioon(harjoitus, tulos, toistot);
 
                 // Tallennetaan tiedot selaimen paikalliseen tallennustilaan
                 tallennaSelaimenTietoihin(tulosTeksti);
@@ -127,6 +81,9 @@
                     uusiTulos.textContent = tulos;
                     uusiTulos.classList.add('list-group-item');
                     tuloksetLista.appendChild(uusiTulos);
-
-                    // Lisätään tulos kaavioon tallennetun tiedon perusteella
-                    const harjoitus = tulos.split
+                });
+            }
+        };
+    </script>
+</body>
+</html>
