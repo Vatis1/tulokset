@@ -3,10 +3,55 @@
 <head>
     <title>Kuntosalitreenin Tuloslaskuri</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url('https://previews.123rf.com/images/wavebreakmediamicro/wavebreakmediamicro1509/wavebreakmediamicro150952301/45650930-two-fit-people-on-the-background-in-crossfit-gym.jpg');
+            background-size: cover;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .form-group label {
+            color: black;
+            font-weight: bold;
+        }
+        h1 {
+            color: black;
+            text-decoration: underline;
+        }
+        .btn-primary {
+            background-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .list-group-item {
+            color: black;
+            font-weight: bold;
+        }
+        /* Lisää jokaiselle liikkeelle oma taustaväri */
+        .penkkipunnerrus {
+            background-color: #ffcccb; /* Punainen */
+        }
+        .pystypunnerrus {
+            background-color: #c2f0c2; /* Vihreä */
+        }
+        .maastaveto {
+            background-color: #c2c2f0; /* Sininen */
+        }
+        .leuanveto {
+            background-color: #f0c2f0; /* Vaaleanpunainen */
+        }
+        .kyykky {
+            background-color: #f0f0c2; /* Keltainen */
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">Syötä treenitulos ja viikko</h1>
+        <h1 class="text-center">Syötä treenitulos</h1>
         <form class="mb-4">
             <div class="form-group">
                 <label for="harjoitus">Harjoitus:</label>
@@ -26,10 +71,6 @@
                 <label for="toistot">Toistomäärä:</label>
                 <input type="number" id="toistot" class="form-control" min="0">
             </div>
-            <div class="form-group">
-                <label for="viikko">Viikko:</label>
-                <input type="number" id="viikko" class="form-control" min="1">
-            </div>
             <button type="button" class="btn btn-primary" onclick="tallennaTulos()">Tallenna</button>
         </form>
 
@@ -44,14 +85,16 @@
             const harjoitus = document.getElementById('harjoitus').value;
             const paino = document.getElementById('paino').value;
             const toistot = document.getElementById('toistot').value;
-            const viikko = document.getElementById('viikko').value;
 
-            if (harjoitus !== '' && paino !== '' && toistot !== '' && viikko !== '') {
-                const tulosTeksti = `${harjoitus}: ${paino} kg, ${toistot} toistoa, Viikko ${viikko}`;
+            if (harjoitus !== '' && paino !== '' && toistot !== '') {
+                const paivamaara = new Date();
+                const formattedDate = `${paivamaara.getDate()}/${paivamaara.getMonth() + 1}/${paivamaara.getFullYear()}`;
+                const tulosTeksti = `${harjoitus}: ${paino} kg, ${toistot} toistoa, ${formattedDate}`;
                 const tuloksetLista = document.getElementById('tallennetutTulokset');
                 const uusiTulos = document.createElement('li');
                 uusiTulos.textContent = tulosTeksti;
                 uusiTulos.classList.add('list-group-item');
+                uusiTulos.classList.add(harjoitus.toLowerCase()); // Lisää liikkeen luokka
                 tuloksetLista.appendChild(uusiTulos);
 
                 // Tallennetaan tiedot selaimen paikalliseen tallennustilaan
@@ -61,24 +104,36 @@
                 document.getElementById('harjoitus').value = '';
                 document.getElementById('paino').value = '';
                 document.getElementById('toistot').value = '';
-                document.getElementById('viikko').value = '';
             } else {
                 alert('Täytä kaikki kentät ennen tallennusta.');
             }
         }
 
         function tallennaSelaimenTietoihin(tulos) {
-            // Tallennetaan tulokset selaimen paikalliseen tallennustilaan
-            if (localStorage.tulokset) {
-                const tallennetutTulokset = JSON.parse(localStorage.tulokset);
+            if (localStorage.tallennetutTulokset) {
+                const tallennetutTulokset = JSON.parse(localStorage.tallennetutTulokset);
                 tallennetutTulokset.push(tulos);
-                localStorage.tulokset = JSON.stringify(tallennetutTulokset);
+                localStorage.tallennetutTulokset = JSON.stringify(tallennetutTulokset);
             } else {
-                localStorage.tulokset = JSON.stringify([tulos]);
+                localStorage.tallennetutTulokset = JSON.stringify([tulos]);
             }
         }
 
-        // Ladataan tallennetut tiedot sivun latautuessa
         window.onload = function () {
-            if (localStorage.tulokset) {
-                const tallennetutTulokset = JSON.parse
+            if (localStorage.tallennetutTulokset) {
+                const tallennetutTulokset = JSON.parse(localStorage.tallennetutTulokset);
+                const tuloksetLista = document.getElementById('tallennetutTulokset');
+                tallennetutTulokset.forEach(function (tulos) {
+                    const uusiTulos = document.createElement('li');
+                    uusiTulos.textContent = tulos;
+                    uusiTulos.classList.add('list-group-item');
+                    // Etsi liikkeen nimi tekstistä ja lisää se luokkana
+                    const liikkeenNimi = tulos.split(':')[0].trim().toLowerCase();
+                    uusiTulos.classList.add(liikkeenNimi);
+                    tuloksetLista.appendChild(uusiTulos);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
